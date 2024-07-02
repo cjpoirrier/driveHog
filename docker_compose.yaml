@@ -5,6 +5,12 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./service_account_key.json:/app/service_account_key.json
+      - .:/app
+      - ./downloads:/downloads
     environment:
-      - GOOGLE_APPLICATION_CREDENTIALS=/app/service_account_key.json
+      - FLASK_ENV=development
+      - FLASK_APP=driveHog.py
+      - GOOGLE_APPLICATION_CREDENTIALS=/DATA/AppData/gdown/kinetic-physics-391300-7da91d0c1c4c.json
+      - SERVICE_ACCOUNT_FILE=/DATA/AppData/gdown/kinetic-physics-391300-7da91d0c1c4c.json
+    command: >
+      sh -c "flask run --host=0.0.0.0"
