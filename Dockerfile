@@ -13,5 +13,5 @@ RUN pip install -r requirements.txt
 # Set the GOOGLE_APPLICATION_CREDENTIALS environment variable
 ENV GOOGLE_APPLICATION_CREDENTIALS /app/service_account_key.json
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Run driveHog.py when the container launches
+CMD ["python", "driveHog.py"]
