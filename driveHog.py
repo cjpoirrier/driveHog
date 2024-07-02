@@ -1,21 +1,36 @@
+from flask import Flask, request, render_template
 import gdown
 from google.oauth2 import service_account
+import os
 
-# URL of the file in Google Drive
-url = 'https://drive.google.com/uc?id=your_file_id'
+app = Flask(__name__)
 
-# Path where you want to save the downloaded file
-output = 'downloaded_file.ext'
+# Path to your service account credentials JSON file
+SERVICE_ACCOUNT_FILE = '/DATA/AppData/gdown/kinetic-physics-391300-7da91d0c1c4c.json'
 
-# Function to download file using service account credentials
-def download_file_with_service_account(url, output_path):
-    credentials = service_account.Credentials.from_service_account_file(
-        'service_account_key.json',
-        scopes=['https://www.googleapis.com/auth/drive.readonly']
-    )
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/download', methods=['POST'])
+def download():
+    url = request.form['url']
+    download_path = request.form['path']
     
-    # Download file using gdown with authenticated credentials
-    gdown.download(url, output_path, quiet=False, credentials=credentials)
+    # Ensure the directory exists
+    os.makedirs(download_path, exist_ok=True)
+    
+    # Set the environment variable for Google credentials
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = SERVICE_ACCOUNT_FILE
+    
+    output = os.path.join(download_path, 'downloaded_file')
+    
+    # Download file using gdown with service account credentials
+    try:
+        gdown.download(url, output, quiet=False)
+        return f"File downloaded as {output}"
+    except Exception as e:
+        return f"Error downloading file: {str(e)}"
 
-if __name__ == "__main__":
-    download_file_with_service_account(url, output)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
