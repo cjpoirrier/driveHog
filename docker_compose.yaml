@@ -1,0 +1,10 @@
+version: '3'
+services:
+  gdrive-downloader:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./service_account_key.json:/app/service_account_key.json
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/service_account_key.json
